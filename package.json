@@ -25,7 +25,7 @@
   "bugs": {
     "url": "https://github.com/MirrorCY/sd-extra/issues"
   },
-  "homepage": "https://koishi.ilharper.com/",
+  "homepage": "https://github.com/MirrorCY/sd-extra",
   "scripts": {
     "build": "atsc -b"
   },

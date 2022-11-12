@@ -1,6 +1,7 @@
 import { Dict, Schema, Time } from 'koishi'
 
 export interface Config {
+  upscalers: Array<string>
   endpoint: string
   headers?: Dict<string>
   maxRetryCount?: number
@@ -11,9 +12,23 @@ export interface Config {
 
 export const Config = Schema.intersect([
   Schema.object({
-    endpoint: Schema.string().description('API 服务器地址。例如 http://127.0.0.1:7860').required(),
+    endpoint: Schema.string().description('API 服务器地址。例如 http://127.0.0.1:7860').required().default('http://127.0.0.1:7860'),
     headers: Schema.dict(String).description('要附加的额外请求头。如无必要，此项不填写。'),
   }).description('接入设置'),
+
+  Schema.object({
+    upscalers: Schema.array(String).description('允许使用的超分辨率模型，默认使用第一个。')
+    .default([
+      'SwinIR 4x',
+      'ScuNET',
+      'ScuNET PSNR',
+      'ESRGAN_4x',
+      'LDSR',
+      'Nearest',
+      'Lanczos',
+      'None'
+    ]),
+  }).description('模型设置'),
 
   Schema.object({
     maxRetryCount: Schema.natural().description('连接失败时最大的重试次数。').default(3),

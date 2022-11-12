@@ -1,11 +1,15 @@
 commands:
   extra:
-    description: 使用 SD-WebUI api 对输入的图像进行超分辨率处理。
+    description: 使用 SD-WebUI 对输入的图像进行超分辨率处理。
     usage: |-
-      使用方法： extra [图片]; extra -r 1.5 [图片]。
+      对输入的图像进行超分辨率处理
       此插件基于 https://github.com/koishijs/novelai-bot 修改完成, 快去给原项目点个 star 吧！
     options:
       resize: 放大倍数 (1~4) 默认为 2
+      upscaler: 可用的模型有 {0} 这些
+
+    example: extra [图片]; extra -r 1.5 [图片]。
+      
     messages:
       expect-image: 请输入图片。
       concurrent-jobs@random:

@@ -35,9 +35,14 @@ export function apply(ctx: Context, config: Config) {
     .userFields(['authority'])
     .shortcut('放大', { fuzzy: true })
     .option('resize', '-r <resize:number>')
+    .option('upscaler', '-s <upscaler:string>')
+    .option('upscalerIndex', '-i <upscalerIndex:number>')
     .action(async ({ session, options }, input) => {
       //空输入的处理
-      if (!input?.trim()) return session.execute('help extra')
+      if (!input?.trim()) {
+        session.text('commands.extra.options.upscaler', [config.upscalers.join(', ')])
+        return session.execute('help extra')
+      }
       //图像？
       let imgUrl: string, image: ImageData
       input = segment.transform(input, {
@@ -48,10 +53,13 @@ export function apply(ctx: Context, config: Config) {
       })
       //存参数的地方
       const parameters: Dict = {
-        resize: 2
+        resize: 2,
+        upscalerIndex: 0,
+        upscaler: undefined
       }
       Object.assign(parameters, {
         resize: options.resize ?? 2,
+        upscalerIndex: options.upscalerIndex ?? 0
       })
       //下载图像
       if (imgUrl) {
@@ -84,6 +92,7 @@ export function apply(ctx: Context, config: Config) {
         globalTasks.delete(id)
       }
 
+      // TODO：
       // resize_mode: Literal[0, 1] = Field(default=0, title="Resize Mode", description="Sets the resize mode: 0 to upscale by upscaling_resize amount, 1 to upscale up to upscaling_resize_h x upscaling_resize_w.")
       // show_extras_results: bool = Field(default=True, title="Show results", description="Should the backend return the generated image?")
       // gfpgan_visibility: float = Field(default=0, title="GFPGAN Visibility", ge=0, le=1, allow_inf_nan=False, description="Sets the visibility of GFPGAN, values should be between 0 and 1.")
@@ -102,7 +111,7 @@ export function apply(ctx: Context, config: Config) {
         return {
           image: image && image.dataUrl, // sd-webui accepts data URLs with base64 encoded image
           upscaling_resize: parameters.resize,
-          upscaler_1: 'SwinIR_4x'  //TODO
+          upscaler_1: parameters.upscaler ?? config.upscalers[parameters.upscalerIndex ?? 0]
         }
       })()
 
