@@ -6,7 +6,8 @@ commands:
       此插件基于 https://github.com/koishijs/novelai-bot 修改完成, 快去给原项目点个 star 吧！
     options:
       resize: 放大倍数 (1~4) 默认为 2
-      upscaler: 可用的模型有 {0} 这些
+      upscaler: 通过名称选择模型（没做完
+      upscalerIndex: 通过序号选择模型（没做完
 
     example: extra [图片]; extra -r 1.5 [图片]。
       

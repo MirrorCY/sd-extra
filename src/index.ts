@@ -30,7 +30,7 @@ export function apply(ctx: Context, config: Config) {
   ctx.i18n.define('zh', require('./locales/zh'))
   const tasks: Dict<Set<string>> = Object.create(null)
   const globalTasks = new Set<string>()
-  const cmd = ctx.command('extra <prompts:text>')
+    const cmd = ctx.command('extra <prompts:text>')
     .alias('ext')
     .userFields(['authority'])
     .shortcut('放大', { fuzzy: true })
@@ -40,7 +40,6 @@ export function apply(ctx: Context, config: Config) {
     .action(async ({ session, options }, input) => {
       //空输入的处理
       if (!input?.trim()) {
-        session.text('commands.extra.options.upscaler', [config.upscalers.join(', ')])
         return session.execute('help extra')
       }
       //图像？
