@@ -12,7 +12,7 @@ export interface Config {
 
 export const Config = Schema.intersect([
   Schema.object({
-    endpoint: Schema.string().description('API 服务器地址。例如 http://127.0.0.1:7860').required().default('http://127.0.0.1:7860'),
+    endpoint: Schema.string().description('API 服务器地址。例如 http://127.0.0.1:7860').default('http://127.0.0.1:7860'),
     headers: Schema.dict(String).description('要附加的额外请求头。如无必要，此项不填写。'),
   }).description('接入设置'),
 
