@@ -17,21 +17,24 @@ export const Config = Schema.intersect([
   }).description('接入设置'),
 
   Schema.object({
-    upscalers: Schema.array(String).description('允许使用的超分辨率模型，默认使用第一个。')
-    .default([
-      'SwinIR 4x',
-      'ScuNET',
-      'ScuNET PSNR',
-      'ESRGAN_4x',
-      'LDSR',
-      'Nearest',
-      'Lanczos',
-      'None'
-    ]),
+    upscalers: Schema.array(String).description('允许使用的超分辨率模型，默认使用第一个。部分模型第一次调用需要下载模型文件，可能会导致超时。')
+      .default([
+        'SwinIR_4x',
+        'ScuNET PSNR',
+        'ScuNET',
+        'R-ESRGAN 4x+ Anime6B',
+        'R-ESRGAN 4x+',
+        'LDSR',
+        'ESRGAN_4x',
+        'BSRGAN',
+        'Nearest',
+        'Lanczos',
+        'None'
+      ]),
   }).description('模型设置'),
 
   Schema.object({
-    maxRetryCount: Schema.natural().description('连接失败时最大的重试次数。').default(3),
+    maxRetryCount: Schema.natural().description('连接失败时最大的重试次数。').default(1),
     requestTimeout: Schema.number().role('time').description('当请求超过这个时间时会中止并提示超时。').default(Time.minute),
     recallTimeout: Schema.number().role('time').description('图片发送后自动撤回的时间 (设置为 0 以禁用此功能)。').default(0),
     maxConcurrency: Schema.number().description('单个频道下的最大并发数量 (设置为 0 以禁用此功能)。').default(0),

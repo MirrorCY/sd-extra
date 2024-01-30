@@ -1,4 +1,4 @@
-import { Context, Dict, Logger, Quester, segment, Session, trimSlash } from 'koishi'
+import { Context, Dict, Logger, Quester, h, Session, trimSlash } from 'koishi'
 import { Config } from './config'
 import { ImageData, StableDiffusionWebUI } from './types'
 import { download, NetworkError, stripDataPrefix } from './utils'
@@ -33,7 +33,6 @@ export function apply(ctx: Context, config: Config) {
     const cmd = ctx.command('extra <prompts:text>')
     .alias('ext')
     .userFields(['authority'])
-    .shortcut('放大', { fuzzy: true })
     .option('resize', '-r <resize:number>')
     .option('upscaler', '-s <upscaler:string>')
     .option('upscalerIndex', '-i <upscalerIndex:number>')
@@ -44,12 +43,7 @@ export function apply(ctx: Context, config: Config) {
       }
       //图像？
       let imgUrl: string, image: ImageData
-      input = segment.transform(input, {
-        image(attrs) {
-          imgUrl = attrs.url
-          return ''
-        },
-      })
+      imgUrl = h.select(input, 'img')[0].attrs.src
       //存参数的地方
       const parameters: Dict = {
         resize: 2,
@@ -145,7 +139,7 @@ export function apply(ctx: Context, config: Config) {
       if (!base64.trim()) return session.text('.empty-response')
 
       function getContent() {
-        return segment.image('base64://' + base64)
+        return h.image('base64://' + base64)
       }
 
       const ids = await session.send(getContent())
