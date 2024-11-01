@@ -1,17 +1,13 @@
 {
   "name": "koishi-plugin-sd-extra",
   "description": "Upsample images by SD-WebUI",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib",
     "dist"
   ],
-  "browser": {
-    "image-size": false,
-    "libsodium-wrappers": false
-  },
   "author": "MirrorCY <42@koishi.chat>",
   "license": "MIT",
   "repository": {
@@ -41,22 +37,12 @@
     "ai",
     "paint",
     "image",
-    "super-resolution"
+    "super-resolution",
+    "放大",
+    "图像",
+    "超分辨率"
   ],
   "peerDependencies": {
-    "koishi": "^4.16.7"
-  },
-  "devDependencies": {
-    "@koishijs/plugin-help": "^1.2.6",
-    "@types/libsodium-wrappers": "^0.7.13",
-    "@types/node": "^18.19.10",
-    "atsc": "^1.2.2",
-    "koishi": "^4.16.7",
-    "sass": "^1.70.0",
-    "typescript": "^4.9.5"
-  },
-  "dependencies": {
-    "image-size": "^1.1.1",
-    "libsodium-wrappers": "^0.7.13"
+    "koishi": "^4.18.0"
   }
 }
