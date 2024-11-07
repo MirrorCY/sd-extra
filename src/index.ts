@@ -34,7 +34,7 @@ export function apply(ctx: Context, config: Config) {
     .option('upscaler', '-u <upscaler:text> 手动选择采样器')
     .option('switch', '-x <switch:text> 切换默认采样器')
     .option('show', '-s <show:boolean> 显示可用采样器')
-    .action(async ({ session, options }) => {
+    .action(async ({ session, options }, input) => {
       if (options.switch) {
         if (!(await getUpscalers()).includes(options.switch)) return `似乎不存在名为 ${options.switch} 的采样器`
         config.upscaler = options.switch
@@ -44,7 +44,7 @@ export function apply(ctx: Context, config: Config) {
       options.resize ??= 2
       options.upscaler ??= config.upscaler
       if (options.show) return `当前采样器为：${options.upscaler}\n可用的采样器有：\n${(await getUpscalers()).join('\n')}`
-      const imgUrl = h.select(session.elements, 'img')[0]?.attrs.src
+      const imgUrl = h.select(input, 'img')[0]?.attrs.src
       if (!imgUrl) return session.execute(`help ${name}`)
       const img = await ctx.http.get(imgUrl, { responseType: 'arraybuffer' })
       const res = await ctx.http.post<ImageUpscaleResult>(
