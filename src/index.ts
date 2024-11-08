@@ -5,11 +5,13 @@ export const name = 'sd-extra'
 export interface Config {
   endpoint?: string
   upscaler?: string
+  resize?: number
 }
 
 export const Config: Schema<Config> = Schema.object({
   endpoint: Schema.string().default('http://127.0.0.1:7860').description('sd-webui 的地址'),
   upscaler: Schema.string().default('SwinIR_4x').description('默认采样器'),
+  resize: Schema.number().default(2).min(0).max(4).description('默认放大倍数'),
 })
 
 export function apply(ctx: Context, config: Config) {
@@ -41,7 +43,7 @@ export function apply(ctx: Context, config: Config) {
         ctx.scope.update(config, false)
         return `已将默认采样器切换为 ${options.switch}`
       }
-      options.resize ??= 2
+      options.resize ??= config.resize
       options.upscaler ??= config.upscaler
       if (options.show) return `当前采样器为：${options.upscaler}\n可用的采样器有：\n${(await getUpscalers()).join('\n')}`
       const imgUrl = h.select(input, 'img')[0]?.attrs.src
