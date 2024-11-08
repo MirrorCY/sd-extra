@@ -26,25 +26,29 @@ export function apply(ctx: Context, config: Config) {
   }
 
   const getUpscalers = async () => {
-    const res = await ctx.http.get<Upscaler[]>(endpoint + '/sdapi/v1/upscalers')
-    return res.map(item => item.name)
+    const upscalers = await ctx.http.get<Upscaler[]>(endpoint + '/sdapi/v1/upscalers')
+    return upscalers.map(upscaler => upscaler.name)
   }
 
   ctx.command(name, 'sd-extra')
     .alias('放大')
     .option('resize', '-r <resize:number> 放大倍数', { type: resize })
     .option('upscaler', '-u <upscaler:text> 手动选择采样器')
-    .option('switch', '-x <switch:text> 切换默认采样器')
+    .option('switch', '-x <switch:boolean> 切换默认采样器')
     .option('show', '-s <show:boolean> 显示可用采样器')
     .action(async ({ session, options }, input) => {
-      if (options.switch) {
-        if (!(await getUpscalers()).includes(options.switch)) return `似乎不存在名为 ${options.switch} 的采样器`
-        config.upscaler = options.switch
-        ctx.scope.update(config, false)
-        return `已将默认采样器切换为 ${options.switch}`
-      }
       options.resize ??= config.resize
       options.upscaler ??= config.upscaler
+      if (options.switch) {
+        const upscalers = await getUpscalers()
+        const upscalerList = upscalers.map((upscaler, index) => `${index + 1}. ${upscaler}`).join('\n')
+        session.send(`当前采样器为：${options.upscaler}\n可用的采样器有：\n${upscalerList}\n请输入要切换的采样器序号：`)
+        const index = parseInt(await session.prompt())
+        if (isNaN(index) || index < 1 || index > upscalers.length) return '输入错误'
+        config.upscaler = upscalers[index - 1]
+        ctx.scope.update(config, false)
+        return `已将默认采样器切换为 ${upscalers[index - 1]}`
+      }
       if (options.show) return `当前采样器为：${options.upscaler}\n可用的采样器有：\n${(await getUpscalers()).join('\n')}`
       const imgUrl = h.select(input, 'img')[0]?.attrs.src
       if (!imgUrl) return session.execute(`help ${name}`)
